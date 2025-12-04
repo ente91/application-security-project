@@ -1,12 +1,15 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Future Imperfect by HTML5 UP</title>
+        <title>Application Security - Project</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
         {{-- Vite: CSS + JS --}}
-        @vite(['resources/assets/css/main.css', 'resources/assets/js/main.js'])
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+        @vite(['resources/assets/css/main.css'])
+        
     </head>
     <body class="is-preload">
 
@@ -15,28 +18,14 @@
 
             <!-- Header -->
             <header id="header">
-                <h1><a href="{{ url('/') }}">Future Imperfect</a></h1>
+                <h1><a href="{{ url('/') }}">APPLICATION SECURITY - PROJECT</a></h1>
                 <nav class="links">
                     <ul>
-                        <li><a href="#">Lorem</a></li>
-                        <li><a href="#">Ipsum</a></li>
-                        <li><a href="#">Feugiat</a></li>
-                        <li><a href="#">Tempus</a></li>
-                        <li><a href="#">Adipiscing</a></li>
+                        <li><a href="#">Home</a></li>
                     </ul>
                 </nav>
                 <nav class="main">
-                    <ul>
-                        <li class="search">
-                            <a class="fa-search" href="#search">Search</a>
-                            <form id="search" method="get" action="#">
-                                <input type="text" name="query" placeholder="Search" />
-                            </form>
-                        </li>
-                        <li class="menu">
-                            <a class="fa-bars" href="#menu">Menu</a>
-                        </li>
-                    </ul>
+
                 </nav>
             </header>
 
