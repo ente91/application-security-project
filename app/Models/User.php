@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'last_login_at',
+        'email_activated_at'
     ];
 
     /**
@@ -29,8 +31,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
     /**
@@ -41,8 +42,15 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_activated_at' => 'datetime',
+            'name' => 'string',
+            'email' => 'string',
+            'password' => 'hashed'
         ];
     }
+    public function tokens(): HasMany
+    {
+        return $this->hasMany(ActivationToken::class);
+    }
 }
+
