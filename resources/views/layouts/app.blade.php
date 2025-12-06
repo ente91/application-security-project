@@ -1,48 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Simple Posts</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Application Security - Simple Posts</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-    {{-- CSS via Vite --}}
-    @vite(['resources/assets/css/main.css'])
-</head>
-<body class="is-preload">
-<div id="wrapper">
+        {{-- Same CSS pipeline as original project --}}
+        @vite(['resources/assets/css/main.css'])
+    </head>
+    <body class="is-preload">
 
-    <header id="header">
-        <h1><a href="{{ route('home') }}">Simple Posts</a></h1>
+        <!-- Wrapper -->
+        <div id="wrapper">
 
-        <nav class="links">
-            <ul>
-                @auth
-                    <li>Welcome, {{ auth()->user()->name }}</li>
-                    <li><a href="{{ route('posts.create') }}">New post</a></li>
-                    <li>
-                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                            @csrf
-                            <button type="submit">Logout</button>
-                        </form>
-                    </li>
-                @else
-                    <li><a href="{{ route('login') }}">Log in</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
-                @endauth
-            </ul>
-        </nav>
-    </header>
+            <!-- Header -->
+            <header id="header">
+                <h1><a href="{{ route('home') }}">Simple Posts</a></h1>
 
-    <div id="main">
-        @if (session('status'))
-            <section class="flash-message">
-                {{ session('status') }}
-            </section>
-        @endif
+                <nav class="links">
+                    <ul>
+                        <li><a href="{{ route('home') }}">Home</a></li>
 
-        @yield('content')
-    </div>
+                        @auth
+                            <li><a href="{{ route('posts.create') }}">New post</a></li>
+                            <li>Welcome, {{ auth()->user()->name }}</li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="button small">Logout</button>
+                                </form>
+                            </li>
+                        @else
+                            <li><a href="{{ route('login') }}">Log in</a></li>
+                            <li><a href="{{ route('register') }}">Register</a></li>
+                        @endauth
+                    </ul>
+                </nav>
+            </header>
 
-</div>
-</body>
+            <!-- Main content -->
+            <div id="main">
+                @if (session('status'))
+                    {{-- Flash message styled as a normal post card --}}
+                    <section class="post status-message">
+                        <p>{{ session('status') }}</p>
+                    </section>
+                @endif
+
+                @yield('content')
+            </div>
+
+        </div>
+    </body>
 </html>

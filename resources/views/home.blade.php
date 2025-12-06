@@ -1,114 +1,37 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <title>Application Security - Project</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+@extends('layouts.app')
 
-        {{-- Vite: CSS + JS --}}
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+@section('content')
+    <section class="post">
+        <header>
+            <div class="title">
+                <h2>New post</h2>
+                <p>Create a new blog entry</p>
+            </div>
+        </header>
 
-        @vite(['resources/assets/css/main.css'])
-        
-    </head>
-    <body class="is-preload">
+        <form method="POST" action="{{ route('posts.store') }}">
+            @csrf
 
-        <!-- Wrapper -->
-        <div id="wrapper">
-
-            <!-- Header -->
-            <header id="header">
-                <h1><a href="{{ url('/') }}">APPLICATION SECURITY - PROJECT</a></h1>
-                <nav class="links">
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                    </ul>
-                </nav>
-                <nav class="main">
-
-                </nav>
-            </header>
-
-            <!-- Menu -->
-            <section id="menu">
-                <!-- Search -->
-                <section>
-                    <form class="search" method="get" action="#">
-                        <input type="text" name="query" placeholder="Search" />
-                    </form>
-                </section>
-
-                <!-- Links -->
-                <section>
-                    <ul class="links">
-                        <li>
-                            <a href="#">
-                                <h3>Lorem ipsum</h3>
-                                <p>Feugiat tempus veroeros dolor</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <h3>Dolor sit amet</h3>
-                                <p>Sed vitae justo condimentum</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <h3>Feugiat veroeros</h3>
-                                <p>Phasellus sed ultricies mi congue</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <h3>Etiam sed consequat</h3>
-                                <p>Porta lectus amet ultricies</p>
-                            </a>
-                        </li>
-                    </ul>
-                </section>
-
-                <!-- Actions -->
-                <section>
-                    <ul class="actions stacked">
-                        <li><a href="#" class="button large fit">Log In</a></li>
-                    </ul>
-                </section>
-            </section>
-
-            <!-- Main -->
-            <div id="main">
-
-                <!-- Post -->
-
-
-                <!-- Pagination -->
-                <ul class="actions pagination">
-                    <li><a href="" class="disabled button large previous">Previous Page</a></li>
-                    <li><a href="#" class="button large next">Next Page</a></li>
-                </ul>
-
+            <div class="field">
+                <label for="name">Title</label>
+                <input id="name" type="text" name="name" value="{{ old('name') }}" required>
+                @error('name')
+                    <p class="error">{{ $message }}</p>
+                @enderror
             </div>
 
-            <!-- Sidebar -->
-            <section id="sidebar">
+            <div class="field" style="margin-top: 1rem;">
+                <label for="content">Content</label>
+                <textarea id="content" name="content" rows="6" required>{{ old('content') }}</textarea>
+                @error('content')
+                    <p class="error">{{ $message }}</p>
+                @enderror
+            </div>
 
-                <!-- Intro -->
-                <section id="intro">
-                    <a href="#" class="logo">
-                        <img src="{{ Vite::asset('resources/assets/images/logo.jpg') }}" alt="" />
-                    </a>
-                    <header>
-                        <h2>Future Imperfect</h2>
-                        <p>Another fine responsive site template by <a href="http://html5up.net">HTML5 UP</a></p>
-                    </header>
-                </section>
-
-                <!-- Mini Posts, Posts List, About, Footer -->
-                {{-- tu zostawia Pani swój dotychczasowy kod, tylko obrazki na Vite::asset jak już Pani zrobiła --}}
-
-            </section>
-
-        </div>
-    </body>
-</html>
+            <ul class="actions" style="margin-top: 1.5rem;">
+                <li><button type="submit" class="button large">Publish</button></li>
+                <li><a href="{{ route('home') }}" class="button">Cancel</a></li>
+            </ul>
+        </form>
+    </section>
+@endsection

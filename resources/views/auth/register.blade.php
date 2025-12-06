@@ -1,46 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
-    <section>
+    <section class="post">
         <header>
-            <h2>Register</h2>
+            <div class="title">
+                <h2>Register</h2>
+                <p>Create a new account</p>
+            </div>
         </header>
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            <div>
-                <label for="name">Name</label><br>
+            <div class="field">
+                <label for="name">Name</label>
                 <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
                 @error('name')
-                    <div class="error">{{ $message }}</div>
+                    <p class="error">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div style="margin-top: 1rem;">
-                <label for="email">Email</label><br>
+            <div class="field" style="margin-top: 1rem;">
+                <label for="email">Email</label>
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required>
                 @error('email')
-                    <div class="error">{{ $message }}</div>
+                    <p class="error">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div style="margin-top: 1rem;">
-                <label for="password">Password</label><br>
+            <div class="field" style="margin-top: 1rem;">
+                <label for="password">Password</label>
                 <input id="password" type="password" name="password" required>
                 @error('password')
-                    <div class="error">{{ $message }}</div>
+                    <p class="error">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div style="margin-top: 1rem;">
-                <label for="password_confirmation">Confirm password</label><br>
+            <div class="field" style="margin-top: 1rem;">
+                <label for="password_confirmation">Confirm password</label>
                 <input id="password_confirmation" type="password" name="password_confirmation" required>
             </div>
 
-            <div style="margin-top: 1rem;">
-                <button type="submit" class="button">Create account</button>
-            </div>
+            <ul class="actions" style="margin-top: 1.5rem;">
+                <li><button type="submit" class="button large">Create account</button></li>
+            </ul>
         </form>
     </section>
 @endsection
