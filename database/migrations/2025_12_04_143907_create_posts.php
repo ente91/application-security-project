@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->string('name');          // title of the post
+            $table->text('content');         // body of the post
+            $table->foreignId('user_id')     // author
+                  ->constrained()
+                  ->onDelete('cascade');
             $table->timestamps();
-            $table->string("name");
-            $table->string("userId");
-            $table->string("content");
         });
     }
 
