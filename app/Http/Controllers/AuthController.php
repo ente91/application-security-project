@@ -20,6 +20,8 @@ class AuthController extends Controller
 
     /**
      * Handle registration and send activation email.
+     *
+     * User is NOT logged in here; they must first activate via email.
      */
     public function register(Request $request)
     {
@@ -35,15 +37,12 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        // Fire the Registered event so Laravel sends the verification email
+        // Trigger Laravel's built-in verification email
         event(new Registered($user));
 
-        // Log the user in so the verification link works (uses auth middleware)
-        Auth::login($user);
-
         return redirect()
-            ->route('verification.notice')
-            ->with('status', 'Registration successful. We have sent an activation link to your email address.');
+            ->route('login')
+            ->with('status', 'Registration successful. We have sent an activation link to your email address. Please verify your email before logging in.');
     }
 
     /**
@@ -56,6 +55,8 @@ class AuthController extends Controller
 
     /**
      * Handle login.
+     *
+     * If the user is not verified, immediately log them out and show an error.
      */
     public function login(Request $request)
     {
@@ -69,12 +70,19 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            // If user is not activated yet, redirect to verification notice
-            if ($request->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&
-                ! $request->user()->hasVerifiedEmail()) {
-                return redirect()
-                    ->route('verification.notice')
-                    ->with('status', 'Please verify your email address to activate your account.');
+            $user = $request->user();
+
+            if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&
+                ! $user->hasVerifiedEmail()) {
+
+                // Do NOT allow an unverified user to stay logged in
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->withErrors([
+                    'email' => 'Your account is not activated yet. Please use the activation link sent to your email.',
+                ])->onlyInput('email');
             }
 
             return redirect()
