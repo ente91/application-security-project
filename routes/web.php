@@ -4,4 +4,4 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\BlogController;
 
-Route::get('/', [BlogController::class, 'index']);
+Route::get('/', [PostController::class, 'index'])->name('home');
