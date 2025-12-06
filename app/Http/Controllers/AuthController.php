@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,14 +19,14 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle registration.
+     * Handle registration and send activation email.
      */
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name'                  => ['required', 'string', 'max:255'],
-            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password'              => ['required', 'string', 'min:8', 'confirmed'],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = User::create([
@@ -34,9 +35,15 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
+        // Fire the Registered event so Laravel sends the verification email
+        event(new Registered($user));
+
+        // Log the user in so the verification link works (uses auth middleware)
         Auth::login($user);
 
-        return redirect()->route('home')->with('status', 'Registration successful. You are now logged in.');
+        return redirect()
+            ->route('verification.notice')
+            ->with('status', 'Registration successful. We have sent an activation link to your email address.');
     }
 
     /**
@@ -62,7 +69,17 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('home'))->with('status', 'You are now logged in.');
+            // If user is not activated yet, redirect to verification notice
+            if ($request->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&
+                ! $request->user()->hasVerifiedEmail()) {
+                return redirect()
+                    ->route('verification.notice')
+                    ->with('status', 'Please verify your email address to activate your account.');
+            }
+
+            return redirect()
+                ->intended(route('home'))
+                ->with('status', 'You are now logged in.');
         }
 
         return back()->withErrors([
