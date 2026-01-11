@@ -4,24 +4,26 @@
     <section class="post">
         <header>
             <div class="title">
-                <h2>Log in</h2>
-                <p>Access your account</p>
+                <h2>Reset password</h2>
+                <p>Choose a new password for your account</p>
             </div>
         </header>
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('password.update') }}">
             @csrf
+
+            <input type="hidden" name="token" value="{{ $token }}">
 
             <div class="field">
                 <label for="email">Email</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+                <input id="email" type="email" name="email" value="{{ old('email', $email) }}" required autofocus>
                 @error('email')
                     <p class="error">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="field" style="margin-top: 1rem;">
-                <label for="password">Password</label>
+                <label for="password">New password</label>
                 <input id="password" type="password" name="password" required>
                 @error('password')
                     <p class="error">{{ $message }}</p>
@@ -29,18 +31,13 @@
             </div>
 
             <div class="field" style="margin-top: 1rem;">
-                <label>
-                    <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                    Remember me
-                </label>
+                <label for="password_confirmation">Confirm new password</label>
+                <input id="password_confirmation" type="password" name="password_confirmation" required>
             </div>
 
-            <p style="margin-top: 1rem;">
-                <a href="{{ route('password.request') }}">Forgot your password?</a>
-            </p>
-
             <ul class="actions" style="margin-top: 1.5rem;">
-                <li><button type="submit" class="button large">Log in</button></li>
+                <li><button type="submit" class="button large">Reset password</button></li>
+                <li><a href="{{ route('login') }}" class="button">Back to login</a></li>
             </ul>
         </form>
     </section>
