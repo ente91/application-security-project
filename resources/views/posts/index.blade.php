@@ -38,6 +38,24 @@
                     </header>
 
                     <p>{{ $post->content }}</p>
+
+                    @if($post->attachments && $post->attachments->isNotEmpty())
+                        <div style="margin-top: 0.75rem;">
+                            <strong>Attachments:</strong>
+                            <ul style="margin: 0.25rem 0 0 1.25rem;">
+                                @foreach($post->attachments as $attachment)
+                                    <li>
+                                        <a href="{{ Storage::disk('public')->url($attachment->path) }}" target="_blank" rel="noopener noreferrer">
+                                            {{ $attachment->original_name }}
+                                        </a>
+                                        <small style="opacity: 0.75;">
+                                            ({{ number_format(($attachment->size ?? 0) / 1024, 1) }} KB)
+                                        </small>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </article>
             @endforeach
         @endif
