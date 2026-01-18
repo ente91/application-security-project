@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: host
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /app/database/database.sqlite
+      TERM: xterm
+    volumes:
+      - .:/app
+      - vendor:/app/vendor
+      - node_modules:/app/node_modules
+      - storage:/app/storage
+      - sqlite_db:/app/database
+
+volumes:
+  vendor:
+  node_modules:
+  storage:
+  sqlite_db:
