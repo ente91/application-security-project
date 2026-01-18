@@ -11,12 +11,23 @@ class PostSeeder extends Seeder
 {
     public function run(): void
     {
+        // Create a demo admin account (if not already present)
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name'     => 'Admin',
+                'password' => Hash::make('password'),
+                'role'     => 'admin',
+            ]
+        );
+
         // Create a demo user (if not already present)
         $user = User::firstOrCreate(
             ['email' => 'alice@example.com'],
             [
                 'name'     => 'Alice Developer',
                 'password' => Hash::make('password'),
+                'role'     => 'user',
             ]
         );
 

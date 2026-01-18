@@ -21,6 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -43,6 +44,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
+            'role'              => 'string',
         ];
+    }
+
+    /**
+     * Roles:
+     *  - user: regular authenticated account
+     *  - admin: platform moderator/administrator
+     */
+    public function isAdmin(): bool
+    {
+        return ($this->role ?? 'user') === 'admin';
     }
 }

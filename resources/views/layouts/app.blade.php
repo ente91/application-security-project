@@ -21,8 +21,18 @@
                     <ul>
                         <li><a href="{{ route('home') }}">Home</a></li>
 
+                        <li>
+                            <form action="{{ route('home') }}" method="GET" style="display: inline-flex; gap: 0.25rem; align-items: center;">
+                                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search..." style="max-width: 12rem;" />
+                                <button type="submit" class="button small">Go</button>
+                            </form>
+                        </li>
+
                         @auth
                             <li><a href="{{ route('posts.create') }}">New post</a></li>
+                            @if(auth()->user()->isAdmin())
+                                <li><a href="{{ route('admin.dashboard') }}">Admin</a></li>
+                            @endif
                             <li>Welcome, {{ auth()->user()->name }}</li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">

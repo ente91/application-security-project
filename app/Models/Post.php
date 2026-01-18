@@ -32,4 +32,20 @@ class Post extends Model
     {
         return $this->hasMany(PostAttachment::class);
     }
+
+    /**
+     * Comments left under the post.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class)->latest();
+    }
+
+    /**
+     * Individual ratings for the post.
+     */
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(PostRating::class);
+    }
 }

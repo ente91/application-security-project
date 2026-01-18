@@ -16,9 +16,28 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['user', 'attachments'])->latest()->get();
+        $q = request()->string('q')->trim()->toString();
 
-        return view('posts.index', compact('posts'));
+        $postsQuery = Post::query()
+            ->with([
+                'user',
+                'attachments',
+                'comments.user',
+                'ratings',
+            ])
+            ->latest();
+
+        // Guests (and all users) can perform simple keyword-based search.
+        if ($q !== '') {
+            $postsQuery->where(function ($qb) use ($q) {
+                $qb->where('name', 'like', "%{$q}%")
+                    ->orWhere('content', 'like', "%{$q}%");
+            });
+        }
+
+        $posts = $postsQuery->get();
+
+        return view('posts.index', compact('posts', 'q'));
     }
 
     /**
@@ -73,5 +92,30 @@ class PostController extends Controller
         });
 
         return redirect()->route('home')->with('status', 'Post has been created.');
+    }
+
+    /**
+     * Delete a post.
+     *
+     * - Regular users can delete only their own posts.
+     * - Admins can delete any post.
+     */
+    public function destroy(Post $post)
+    {
+        $user = Auth::user();
+
+        if (! $user || (! $user->isAdmin() && (int) $post->user_id !== (int) $user->id)) {
+            abort(403);
+        }
+
+        // Clean up uploaded files from the public disk.
+        // DB records are removed by cascading deletes.
+        if ($post->attachments()->exists()) {
+            Storage::disk('public')->deleteDirectory("post-attachments/{$post->id}");
+        }
+
+        $post->delete();
+
+        return redirect()->route('home')->with('status', 'Post has been deleted.');
     }
 }
