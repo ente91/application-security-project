@@ -14,10 +14,6 @@ RUN /bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.4)" \
  && npm install \
  && npm run build \
  && composer install --no-interaction --prefer-dist --optimize-autoloader
+ 
+ENTRYPOINT ["docker-entrypoint.sh"]
 
-VOLUME ["/app/vendor"]
-VOLUME ["/app/node_modules"]
-VOLUME ["/app/storage"]
-VOLUME ["/app/database"]
-
-CMD ["composer", "run", "dev"]

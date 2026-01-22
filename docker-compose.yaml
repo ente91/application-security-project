@@ -11,6 +11,7 @@ services:
       DB_CONNECTION: sqlite
       DB_DATABASE: /app/database/database.sqlite
       TERM: xterm
+    entrypoint: ["sh", "docker-entrypoint.sh"]
     volumes:
       - .:/app
       - vendor:/app/vendor
